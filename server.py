@@ -16,10 +16,10 @@ else:
 HOST_NAME = 'localhost'
 PORT_NUMBER = 8888
 ENTRANTS_FILE = 'entries.txt'
-PASSWORD_FILE = 'passwords.txt'
-DISPLAY_FILE = 'display.html'
-DEFAULT_FILE = 'default.html'
-FORM_FILE = 'form.html'
+PASSWORD_FILE = 'passwords/darkweb2017_top10K.txt'
+DISPLAY_FILE = 'html/display.html'
+DEFAULT_FILE = 'html/default.html'
+FORM_FILE = 'html/form.html'
 LAST_PASS = '????????'
 LAST_POS ='??'
 
