@@ -7,7 +7,7 @@ from cgi import parse_header, parse_multipart
 
 if python_version.startswith('3'):
     from urllib.parse import parse_qs
-    from http.server import BaseHTTPRequestHandler
+    from http.server import BaseHTTPRequestHandler, HTTPServer
 else:
     from urlparse import parse_qs
     from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
@@ -76,7 +76,7 @@ class MyHandler(BaseHTTPRequestHandler):
             HTML = string.replace(HTML, 'POSITION-STRING', str(LAST_POS), 1)
             s.wfile.write(HTML)
         else:
-            s.wfile.write(DEFAULT_HTML)
+            s.wfile.write(DEFAULT_HTML) # This is the next thing that breaks in Python3
 
     def do_POST(s):
         global LAST_PASS
@@ -96,12 +96,12 @@ if __name__ == '__main__':
     FORM_HTML = ReturnFileContents(FORM_FILE)
     server_class = HTTPServer
     httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
-    print time.asctime(), "Server Starts - http://%s:%s" % (HOST_NAME, PORT_NUMBER)
+    print('{} Server Starts - http://{}:{}'.format(time.asctime(), HOST_NAME, PORT_NUMBER))
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     httpd.server_close()
-    print time.asctime(), "Server Stops - http://%s:%s" % (HOST_NAME, PORT_NUMBER)
+    print('{} Server Stops - http://{}:{}'.format(time.asctime(), HOST_NAME, PORT_NUMBER))
 
 
