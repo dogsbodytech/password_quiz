@@ -1,30 +1,43 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<title>Display</title>
-<meta http-equiv="refresh" content="2">
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<style type="text/css">
-body { background-color: #f00; }
-.container {
-    position: absolute;
-    text-align: center;
-    font-size: xx-large;
-    top: 50%;
-    left: 50%;
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
-}
-</style>
+  <meta http-equiv="refresh" content="2">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/bootstrap.min.css">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <title>Display</title>
+  <style type="text/css">
+    body {padding-top: 20px;}
+  </style>
 </head>
 <body>
-<div class="container">
-<h1>Password: PASSWORD-STRING</h1>
-<br/>
-<br/>
-<br/>
-<h2>Position: POSITION-STRING</h2>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-4">
+      <img src="/logo.png" class="img-fluid">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-1">
+    </div>
+    <div class="col-10 text-center">
+      <p><br/><br/><br/></p>
+      <h1 class="display-2">Guess the Most Common Password</h1>
+      <h1 class="display-4">A prize for the highest (most common) unique guess</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2">
+    </div>
+    <div class="col-8 text-center">
+      <p><br/><br/><br/><br/></p>
+      <div class="alert alert-danger" role="alert">
+        <h1 class="display-1">Last Guess: PASSSTRING</h1>
+        <h1 class="display-3">Position: #POSSTRING</h1>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 </html>

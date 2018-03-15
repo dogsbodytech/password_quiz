@@ -17,10 +17,12 @@ HOST_NAME = 'localhost'
 PORT_NUMBER = 8888
 ENTRANTS_FILE = 'entries.txt'
 PASSWORD_FILE = 'passwords/darkweb2017_top10K.txt'
-DISPLAY_FILE = 'html/display.html'
+DISPLAY_FILE = 'html/display2.html'
 DEFAULT_FILE = 'html/default.html'
+BOOTSTRAP_FILE = 'html/bootstrap.min.css'
+LOGO_FILE = 'html/dogsbodylogo.png'
 FORM_FILE = 'html/form.html'
-LAST_PASS = '????????'
+LAST_PASS = '??????????'
 LAST_POS ='??'
 
 
@@ -34,9 +36,13 @@ def AddToFile(file, results):
         output.write(results)
 
 
-def ReturnHeader(id, content='text/html'):
+def ReturnHeader(id, content='text/html', cache='no'):
     id.send_response(200)
     id.send_header("Content-type", content)
+    if cache == "yes":
+        id.send_header("Cache-Control", "public, max-age=31536000")
+    else:
+        id.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
     id.end_headers()
 
 
@@ -67,15 +73,23 @@ class MyHandler(BaseHTTPRequestHandler):
         ReturnHeader(s)
 
     def do_GET(s):
-        ReturnHeader(s)
-        if s.path == '/form':
-            s.wfile.write(FORM_HTML)
-        elif s.path == '/display':
+        if s.path == '/display':
+            ReturnHeader(s)
             HTML = DISPLAY_HTML
-            HTML = string.replace(HTML, 'PASSWORD-STRING', LAST_PASS, 1)
-            HTML = string.replace(HTML, 'POSITION-STRING', str(LAST_POS), 1)
+            HTML = string.replace(HTML, 'PASSSTRING', LAST_PASS, 1)
+            HTML = string.replace(HTML, 'POSSTRING', str(LAST_POS), 1)
             s.wfile.write(HTML)
+        elif s.path == '/form':
+            ReturnHeader(s)
+            s.wfile.write(FORM_HTML)
+        elif s.path == '/bootstrap.min.css':
+            ReturnHeader(s,"text/css", "yes")
+            s.wfile.write(BOOTSTRAP_CSS)
+        elif s.path == '/logo.png':
+            ReturnHeader(s,"image/png", "yes")
+            s.wfile.write(LOGO_PNG)
         else:
+            ReturnHeader(s)
             s.wfile.write(DEFAULT_HTML) # This is the next thing that breaks in Python3
 
     def do_POST(s):
@@ -93,6 +107,8 @@ class MyHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     DISPLAY_HTML = ReturnFileContents(DISPLAY_FILE)
     DEFAULT_HTML = ReturnFileContents(DEFAULT_FILE)
+    BOOTSTRAP_CSS = ReturnFileContents(BOOTSTRAP_FILE)
+    LOGO_PNG = ReturnFileContents(LOGO_FILE)
     FORM_HTML = ReturnFileContents(FORM_FILE)
     server_class = HTTPServer
     httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
