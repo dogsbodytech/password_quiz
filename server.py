@@ -40,6 +40,9 @@ def AddToFile(file, results):
 
 def ReplaceStrings(text):
     CLEAN_PASS = (LAST_PASS[:20] + '..') if len(LAST_PASS) > 22 else LAST_PASS
+    for word in RUDEWORDS:
+        word = word.strip()
+        CLEAN_PASS = CLEAN_PASS.replace(word, '*' * len(word))
     text = string.replace(text, 'PASSSTRING', LAST_PASS, 1)
     text = string.replace(text, 'POSSTRING', str(LAST_POS), 1)
     text = string.replace(text, 'CLEANPASS', CLEAN_PASS, 1)
@@ -122,7 +125,8 @@ if __name__ == '__main__':
     BOOTSTRAP_CSS = ReturnFileContents(BOOTSTRAP_FILE)
     LOGO_PNG = ReturnFileContents(LOGO_FILE)
     FORM_HTML = ReturnFileContents(FORM_FILE)
-    RUDEWORDS = ReturnFileContents(RUDEWORDS_FILE)
+    with open(RUDEWORDS_FILE) as f:
+        RUDEWORDS = f.readlines()
     server_class = HTTPServer
     httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
     print('{} Server Starts - http://{}:{}'.format(time.asctime(), HOST_NAME, PORT_NUMBER))
