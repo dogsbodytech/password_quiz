@@ -16,8 +16,9 @@ else:
 HOST_NAME = 'localhost'
 PORT_NUMBER = 8888
 ENTRANTS_FILE = 'entries.txt'
+RUDEWORDS_FILE = 'rudewords.txt'
 PASSWORD_FILE = 'passwords/darkweb2017_top10K.txt'
-DISPLAY_FILE = 'html/display2.html'
+DISPLAY_FILE = 'html/display.html'
 DEFAULT_FILE = 'html/default.html'
 BOOTSTRAP_FILE = 'html/bootstrap.min.css'
 LOGO_FILE = 'html/dogsbodylogo.png'
@@ -34,6 +35,14 @@ def ReturnFileContents(file):
 def AddToFile(file, results):
     with open(file, 'a') as output:
         output.write(results)
+
+
+def ReplaceStrings(text):
+    CLEAN_PASS = (LAST_PASS[:20] + '..') if len(LAST_PASS) > 22 else LAST_PASS
+    text = string.replace(text, 'PASSSTRING', LAST_PASS, 1)
+    text = string.replace(text, 'POSSTRING', str(LAST_POS), 1)
+    text = string.replace(text, 'CLEANPASS', CLEAN_PASS, 1)
+    return text
 
 
 def ReturnHeader(id, content='text/html', cache='no'):
@@ -75,13 +84,10 @@ class MyHandler(BaseHTTPRequestHandler):
     def do_GET(s):
         if s.path == '/display':
             ReturnHeader(s)
-            HTML = DISPLAY_HTML
-            HTML = string.replace(HTML, 'PASSSTRING', LAST_PASS, 1)
-            HTML = string.replace(HTML, 'POSSTRING', str(LAST_POS), 1)
-            s.wfile.write(HTML)
+            s.wfile.write(ReplaceStrings(DISPLAY_HTML))
         elif s.path == '/form':
             ReturnHeader(s)
-            s.wfile.write(FORM_HTML)
+            s.wfile.write(ReplaceStrings(FORM_HTML))
         elif s.path == '/bootstrap.min.css':
             ReturnHeader(s,"text/css", "yes")
             s.wfile.write(BOOTSTRAP_CSS)
@@ -96,12 +102,17 @@ class MyHandler(BaseHTTPRequestHandler):
         global LAST_PASS
         global LAST_POS
         ReturnHeader(s)
-        postvars = s.parse_POST() # {'phone': [''], 'passguess': [''], 'name': [''], 'email': ['']} 
+        postvars = s.parse_POST() # {'checkbox':[''],'passguess':[''],'name':[''],'email':['']} 
         LAST_PASS = postvars['passguess'][0]
         LAST_POS = FindLineInFile(LAST_PASS)
-        logline = '{}|{}|{}|{}|{}|{}\n'.format(time.time(),LAST_PASS,LAST_POS,postvars['name'][0],postvars['email'][0],postvars['phone'][0])
+        LAST_NAME = postvars['name'][0]
+        LAST_EMAIL = postvars['email'][0].lower()
+        LAST_CHECK = 'off'
+        if 'checkbox' in postvars:
+            LAST_CHECK = postvars['checkbox'][0]
+        logline = '{}|{}|{}|{}|{}|{}\n'.format(time.time(),LAST_PASS,LAST_POS,LAST_NAME,LAST_EMAIL,LAST_CHECK)
         AddToFile(ENTRANTS_FILE, logline)
-        s.wfile.write(FORM_HTML)
+        s.wfile.write(ReplaceStrings(FORM_HTML))
 
 
 if __name__ == '__main__':
@@ -110,6 +121,7 @@ if __name__ == '__main__':
     BOOTSTRAP_CSS = ReturnFileContents(BOOTSTRAP_FILE)
     LOGO_PNG = ReturnFileContents(LOGO_FILE)
     FORM_HTML = ReturnFileContents(FORM_FILE)
+    RUDEWORDS = ReturnFileContents(RUDEWORDS_FILE)
     server_class = HTTPServer
     httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
     print('{} Server Starts - http://{}:{}'.format(time.asctime(), HOST_NAME, PORT_NUMBER))
