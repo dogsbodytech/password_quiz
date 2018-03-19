@@ -1,6 +1,7 @@
 
 import time
 import string
+import cgi
 
 from sys import version as python_version
 from cgi import parse_header, parse_multipart
@@ -103,8 +104,8 @@ class MyHandler(BaseHTTPRequestHandler):
         global LAST_POS
         ReturnHeader(s)
         postvars = s.parse_POST() # {'checkbox':[''],'passguess':[''],'name':[''],'email':['']} 
-        LAST_PASS = postvars['passguess'][0]
-        LAST_POS = FindLineInFile(LAST_PASS)
+        LAST_PASS = cgi.escape(postvars['passguess'][0])
+        LAST_POS = FindLineInFile(postvars['passguess'][0])
         LAST_NAME = postvars['name'][0]
         LAST_EMAIL = postvars['email'][0].lower()
         LAST_CHECK = 'off'
