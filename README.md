@@ -1,12 +1,33 @@
-# password_quiz
-Password Quiz
+# Password Quiz
 
-Start with `python server.py`
+A simple password quiz where the idea is to guess the most commonly used password but where the winner is the hughest unique guess.
 
 
-Password lists from - https://github.com/danielmiessler/SecLists.git
+##Setup
+* Laptop plugged into external monitor/TV
+* Stock Ubuntu Desktop 
+* Install dependancies `sudo apt install git chromium-browser`
+* Login and `git clone https://github.com/dogsbodytech/password_quiz.git`
+* Start with `cd password_quiz && python server.py`
+* Open up a guest session login
+* Open Firefox on the laptop screen and browse to `localhost:8888/form`
+* Open chromium on external screen and browse to `localhost:8888/display`
+* F11 on both browsers to go full screen
+* Zoom Firefox browser a couple of times to make the form clearer
 
-ToDo
-* Somehow stop rude words being shown on the large screen
-* I really wish that I could get /logo.png & /bootstrap.min.css to be cached by the browser
+#Afterwards
+* Answers are in the entries.txt file, back it up!
+
+##Notes
+* Password lists from - https://github.com/danielmiessler/SecLists.git
+
+##Bugs
+* /display on Firefox flashes with each update (see proposed fix below)
+* /display on Chromium loads slowly the first time after a form submission
+
+##ToDo
+* I really wish that I could get /logo.png & /bootstrap.min.css to be cached by the browser.  This should also fix the flashing issue with /display on Firefox
+* For some reson when running /display on Chromeum and there is a form submission then the page will take ~5 seconds to load!
+* We tend to zoom the form in 2-3 times in the browser to make it more readable. I believe this is possible in CSS to save manually doing it.
+* Perhaps higher contrast text to make the form more readable from standing up/further away.
 
